@@ -35,7 +35,7 @@ public class StudentController {
         return "Student Deleted Successfully";
     }
     @PutMapping("/update/{id}")
-    public StudentResponseDTO updateStudent(@PathVariable String id,@RequestBody StudentRequestDTO student){
+    public StudentResponseDTO updateStudent(@Valid @PathVariable String id, @Valid @RequestBody StudentRequestDTO student){
         return service.updateStudent(id,student);
     }
 
