@@ -1,7 +1,10 @@
 package com.example.day3_student_management_system.controller;
 
+import com.example.day3_student_management_system.DTO.StudentRequestDTO;
+import com.example.day3_student_management_system.DTO.StudentResponseDTO;
 import com.example.day3_student_management_system.model.StudentModel;
 import com.example.day3_student_management_system.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +22,11 @@ public class StudentController {
     // Get and post method in url purposes.
 
     @GetMapping("add-student/")
-    public StudentModel addStudent(@RequestBody StudentModel student){
-        return service.addStudent(student);
+    public StudentResponseDTO addStudent(@Valid @RequestBody StudentRequestDTO Student){
+        return service.addStudent(Student);
     }
     @GetMapping("/students")
-    public List<StudentModel> getStudents(){
+    public List<StudentResponseDTO> getStudents(){
         return service.getStudents();
     }
     @DeleteMapping("/delete/{id}")
@@ -32,7 +35,7 @@ public class StudentController {
         return "Student Deleted Successfully";
     }
     @PutMapping("/update/{id}")
-    public StudentModel updateStudent(@PathVariable String id,@RequestBody StudentModel student){
+    public StudentResponseDTO updateStudent(@PathVariable String id,@RequestBody StudentRequestDTO student){
         return service.updateStudent(id,student);
     }
 

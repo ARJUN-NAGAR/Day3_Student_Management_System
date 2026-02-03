@@ -1,5 +1,8 @@
 package com.example.day3_student_management_system.service;
 
+import com.example.day3_student_management_system.DTO.StudentRequestDTO;
+import com.example.day3_student_management_system.DTO.StudentResponseDTO;
+import com.example.day3_student_management_system.exception.StudentNotFoundException;
 import com.example.day3_student_management_system.model.StudentModel;
 import com.example.day3_student_management_system.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -16,29 +19,73 @@ public class StudentService {
 
     // Create
 
-    public StudentModel addStudent(StudentModel student){
+    /*public StudentModel addStudent(StudentModel student){
         return repository.save(student);
+    }*/
+
+    public StudentResponseDTO addStudent(StudentRequestDTO dto){
+        StudentModel Student=new StudentModel();
+        Student.setName(dto.getName());
+        Student.setAge(dto.getAge());
+        Student.setEmail(dto.getEmail());
+        StudentModel saved=repository.save(Student);
+        return new StudentResponseDTO(
+                saved.getId(),
+                saved.getName(),
+                saved.getAge(),
+                saved.getEmail()
+        );
     }
 
     // Display Students
 
-    public List<StudentModel> getStudents(){
+    /*public List<StudentModel> getStudents(){
         return repository.findAll();
+    }*/
+
+    public List<StudentResponseDTO> getStudents(){
+        return repository.findAll()
+                .stream()
+                .map( s -> new StudentResponseDTO(
+                        s.getId(),
+                        s.getName(),
+                        s.getAge(),
+                        s.getEmail()
+                )).toList();
     }
 
     // delete
 
-    public void deleteStudent(String id){ repository.deleteById(id);}
+   /* public void deleteStudent(String id){ repository.deleteById(id);}*/
+   public void deleteStudent(String id){
+       if(!repository.existsById(id)){
+           throw new StudentNotFoundException("Student does not exist yet");
+       }
+       repository.deleteById(id);}
 
 
     // update
-    public StudentModel updateStudent(String id,StudentModel student){
+    /*public StudentModel updateStudent(String id,StudentModel student){
         StudentModel existingStudent=repository.findById(id)
         .orElseThrow(()->new RuntimeException("No Student found"));
         existingStudent.setName(student.getName());
         existingStudent.setAge(student.getAge());
         existingStudent.setEmail(student.getEmail());
         return repository.save(existingStudent);
+    }*/
+    public StudentResponseDTO updateStudent(String id,StudentRequestDTO dto){
+        StudentModel existingStudent=repository.findById(id)
+                .orElseThrow(()->new StudentNotFoundException("Student does not exist yet"));
+        existingStudent.setName(dto.getName());
+        existingStudent.setAge(dto.getAge());
+        existingStudent.setEmail(dto.getEmail());
+        StudentModel update=repository.save(existingStudent);
+        return new StudentResponseDTO(
+                update.getId(),
+                update.getName(),
+                update.getAge(),
+                update.getEmail()
+        );
     }
 
 }

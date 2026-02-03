@@ -16,7 +16,6 @@ import java.lang.annotation.Documented;
 public class StudentModel {
     @Id
     private String id;
-
     private String name;
     private int age;
     private String email;
