@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*")
 @RestController
 public class StudentController {
 
@@ -21,7 +21,7 @@ public class StudentController {
     // Create function API
     // Get and post method in url purposes.
 
-    @GetMapping("add-student/")
+    @PostMapping("/add-student")
     public StudentResponseDTO addStudent(@Valid @RequestBody StudentRequestDTO Student){
         return service.addStudent(Student);
     }
@@ -37,6 +37,11 @@ public class StudentController {
     @PutMapping("/update/{id}")
     public StudentResponseDTO updateStudent(@Valid @PathVariable String id, @Valid @RequestBody StudentRequestDTO student){
         return service.updateStudent(id,student);
+    }
+    // Add: PatchMapping for partial updates
+    @PatchMapping("/patch/{id}")
+    public StudentResponseDTO patchStudent(@PathVariable String id, @RequestBody StudentRequestDTO studentDTO) {
+        return service.patchStudent(id, studentDTO);
     }
 
 }

@@ -88,4 +88,28 @@ public class StudentService {
         );
     }
 
+    public StudentResponseDTO patchStudent(String id, StudentRequestDTO dto) {
+        StudentModel existing = repository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+
+        // Only update fields that are provided (not null/zero)
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            existing.setName(dto.getName());
+        }
+        if (dto.getAge() > 0) { // Assuming age 0 or less is "not provided"
+            existing.setAge(dto.getAge());
+        }
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            existing.setEmail(dto.getEmail());
+        }
+
+        StudentModel updated = repository.save(existing);
+        return new StudentResponseDTO(
+                updated.getId(),
+                updated.getName(),
+                updated.getAge(),
+                updated.getEmail()
+        );
+    }
+
 }
