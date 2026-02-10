@@ -90,26 +90,25 @@ public class StudentService {
 
     public StudentResponseDTO patchStudent(String id, StudentRequestDTO dto) {
         StudentModel existing = repository.findById(id)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with id: " + id));
+                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
 
-        // Only update fields that are provided (not null/zero)
+        // Update Name
         if (dto.getName() != null && !dto.getName().isBlank()) {
             existing.setName(dto.getName());
         }
-        if (dto.getAge() > 0) { // Assuming age 0 or less is "not provided"
+
+        // Update Age
+        if (dto.getAge() > 0) {
             existing.setAge(dto.getAge());
         }
+
+        // Update Email - Ensure it is exactly matches the field name 'email'
         if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
             existing.setEmail(dto.getEmail());
         }
 
         StudentModel updated = repository.save(existing);
-        return new StudentResponseDTO(
-                updated.getId(),
-                updated.getName(),
-                updated.getAge(),
-                updated.getEmail()
-        );
+        return new StudentResponseDTO(updated.getId(), updated.getName(), updated.getAge(), updated.getEmail());
     }
 
 }
